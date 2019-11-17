@@ -63,7 +63,7 @@ sets have been defined too.
 
 # License
 
-Apache License 2.0
+MIT License
 
 
 [Nexys4DDR]: doc/images/Digilent-NexysA7.jpg
