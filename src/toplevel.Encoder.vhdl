@@ -8,7 +8,7 @@ use     work.StopWatch_pkg.all;
 
 entity toplevel is
 	generic (
-		constant CLOCK_PERIOD_NS : positive := 10
+		constant CLOCK_PERIOD : time := 10 ns
 	);
 	port (
 		Switch         : in  std_logic_vector(3 downto 0);

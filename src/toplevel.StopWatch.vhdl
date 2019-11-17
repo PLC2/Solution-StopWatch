@@ -8,7 +8,7 @@ use     work.StopWatch_pkg.all;
 
 entity toplevel is
 	generic (
-		constant CLOCK_PERIOD_NS : positive := 10
+		constant CLOCK_PERIOD : time := 10 ns
 	);
 	port (
 		Clock          : in  std_logic;
@@ -54,14 +54,14 @@ begin
 	-- Debounce input signals
 	deb: entity work.Debouncer
 		generic map (
-			CLOCK_PERIOD_NS => CLOCK_PERIOD_NS,
-			BITS            => 2
+			CLOCK_PERIOD  => CLOCK_PERIOD,
+			BITS          => 2
 		)
 		port map (
-			Clock    => Clock,
+			Clock     => Clock,
 			
-			Input(0) => Board_Reset,
-			Input(1) => Button(0),
+			Input(0)  => Board_Reset,
+			Input(1)  => Button(0),
 			Output(0) => Deb_Reset,
 			Output(1) => Deb_Start
 		);
@@ -78,10 +78,10 @@ begin
 	-- Stopwatch
 	sw: entity work.Stopwatch
 		generic map (
-			CLOCK_PERIOD_NS => CLOCK_PERIOD_NS,
+			CLOCK_PERIOD  => CLOCK_PERIOD,
 			
-			TIMEBASE_MS     => 10,
-			CONFIG          => STOPWATCH_CONFIGURATION
+			TIMEBASE      => 10 ms,
+			CONFIG        => STOPWATCH_CONFIGURATION
 		)
 		port map (
 			Clock  => Clock,
@@ -95,8 +95,8 @@ begin
 	-- 7-segment display
 	display: entity work.seg7_Display
 		generic map (
-			CLOCK_PERIOD_NS => CLOCK_PERIOD_NS,
-			DIGITS          => Digits'length
+			CLOCK_PERIOD  => CLOCK_PERIOD,
+			DIGITS        => Digits'length
 		)
 		port map (
 			Clock         => Clock,

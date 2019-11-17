@@ -7,10 +7,10 @@ use     work.Utilities.all;
 
 entity Debouncer is
 	generic (
-		CLOCK_PERIOD_NS  : positive := 10;
-		DEBOUNCE_TIME_MS : positive := 3;
+		CLOCK_PERIOD   : time := 10 ns;
+		DEBOUNCE_TIME  : time := 3 ms;
 		
-		BITS             : positive
+		BITS           : positive
 	);
 	port (
 		Clock  : in  std_logic;
@@ -21,13 +21,16 @@ entity Debouncer is
 end entity;
 
 architecture rtl of Debouncer is
+	constant DEBOUNCE_COUNTER_MAX  : positive := DEBOUNCE_TIME / (CLOCK_PERIOD* ite(IS_SIMULATION, 20, 1));
+	constant DEBOUNCE_COUNTER_BITS : positive := log2(DEBOUNCE_COUNTER_MAX);
+	
 begin
-	genBits: for i in Input'range generate
-		constant DEBOUNCE_COUNTER_MAX  : positive := (DEBOUNCE_TIME_MS * ite(IS_SIMULATION, 20, 1000000)) / CLOCK_PERIOD_NS;
-		constant DEBOUNCE_COUNTER_BITS : positive := log2(DEBOUNCE_COUNTER_MAX);
-		
-		signal DebounceCounter         : signed(DEBOUNCE_COUNTER_BITS downto 0) := to_signed(DEBOUNCE_COUNTER_MAX - 3, DEBOUNCE_COUNTER_BITS + 1);
+	assert false report "CLOCK_PERIOD:         " & time'image(CLOCK_PERIOD);
+	assert false report "DEBOUNCE_TIME:        " & time'image(DEBOUNCE_TIME);
+	assert false report "DEBOUNCE_COUNTER_MAX: " & integer'image(DEBOUNCE_COUNTER_MAX);
 
+	genBits: for i in Input'range generate
+		signal DebounceCounter         : signed(DEBOUNCE_COUNTER_BITS downto 0) := to_signed(DEBOUNCE_COUNTER_MAX - 3, DEBOUNCE_COUNTER_BITS + 1);
 	begin
 		process (Clock)
 		begin

@@ -8,9 +8,9 @@ use     work.StopWatch_pkg.all;
 
 entity seg7_Display is
 	generic (
-		CLOCK_PERIOD_NS : positive := 10;
-		REFRESH_RATE_US : positive := 200;
-		DIGITS          : positive
+		CLOCK_PERIOD  : time := 10 ns;
+		REFRESH_RATE  : time := 200 us;
+		DIGITS        : positive
 	);
 	port (
 		Clock         : in  std_logic;
@@ -25,7 +25,7 @@ end entity;
 
 
 architecture rtl of seg7_Display is
-	constant TIMEBASE_COUNTER_MAX : positive := (REFRESH_RATE_US * ite(IS_SIMULATION, 1, 1000)) / CLOCK_PERIOD_NS;
+	constant TIMEBASE_COUNTER_MAX : positive := REFRESH_RATE / (CLOCK_PERIOD * ite(IS_SIMULATION, 1_000, 1));
 	
 	signal Timebase_Counter : unsigned(log2(TIMEBASE_COUNTER_MAX) - 1 downto 0) := (others => '0');
 	signal Timebase_Tick    : std_logic;

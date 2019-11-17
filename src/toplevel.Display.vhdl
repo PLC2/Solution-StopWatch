@@ -8,7 +8,7 @@ use     work.StopWatch_pkg.all;
 
 entity toplevel is
 	generic (
-		constant CLOCK_PERIOD_NS : positive := 10
+		constant CLOCK_PERIOD : time := 10 ns
 	);
 	port (
 		Clock          : in  std_logic;
@@ -41,8 +41,8 @@ begin
 	-- 7-segment display
 	display: entity work.seg7_Display
 		generic map (
-			CLOCK_PERIOD_NS => CLOCK_PERIOD_NS,
-			DIGITS          => Digits'length
+			CLOCK_PERIOD  => CLOCK_PERIOD,
+			DIGITS        => Digits'length
 		)
 		port map (
 			Clock         => Clock,

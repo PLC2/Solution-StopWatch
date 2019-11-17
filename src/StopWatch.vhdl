@@ -5,12 +5,13 @@ use     IEEE.numeric_std.all;
 use     work.Utilities.all;
 use     work.StopWatch_pkg.all;
 
+
 entity Stopwatch is
 	generic (
-		CLOCK_PERIOD_NS : positive := 10;
+		CLOCK_PERIOD  : time := 10 ns;
 		
-		TIMEBASE_MS     : positive;
-		CONFIG          : T_STOPWATCH_CONFIGURATION
+		TIMEBASE      : time;
+		CONFIG        : T_STOPWATCH_CONFIGURATION
 	);
 	port (
 		Clock  : in  std_logic;
@@ -84,9 +85,9 @@ begin
 		end case;
 	end process;
 
-	TimeBase: entity work.Counter
+	TimeBaseCnt: entity work.Counter
 		generic map (
-			MODULO     => (TIMEBASE_MS * ite(IS_SIMULATION, 100, 1000000)) / CLOCK_PERIOD_NS,
+			MODULO     => TIMEBASE / (CLOCK_PERIOD * ite(IS_SIMULATION, 100, 1)),
 			BITS       => 0
 		)
 		port map (
