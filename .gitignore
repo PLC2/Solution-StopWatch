@@ -1,0 +1,19 @@
+# BlockDesign files
+bd/*/**/*.*
+!bd/*/**/*.prj
+!bd/*/*.bd
+!bd/*/*.tcl
+
+# IP Core files
+ip/*/**/*.*
+!ip/*/*.xci
+!ip/*/*.prj
+
+# Vivado project outputs
+project/**/*.*
+!project/*.xpr
+!project/*.tcl
+
+# Vivado logs
+*.log
+*.jou
