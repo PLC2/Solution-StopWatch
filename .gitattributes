@@ -1,0 +1,27 @@
+# Images
+*.jpeg filter=lfs diff=lfs merge=lfs binary
+*.jpg filter=lfs diff=lfs merge=lfs binary
+*.png filter=lfs diff=lfs merge=lfs binary
+
+# Documents
+*.pdf filter=lfs diff=lfs merge=lfs binary
+*.xps filter=lfs diff=lfs merge=lfs binary
+
+# Archives
+*.zip filter=lfs diff=lfs merge=lfs binary
+*.rar filter=lfs diff=lfs merge=lfs binary
+*.bz2 filter=lfs diff=lfs merge=lfs binary
+*.gz filter=lfs diff=lfs merge=lfs binary
+*.tar filter=lfs diff=lfs merge=lfs binary
+*.xz filter=lfs diff=lfs merge=lfs binary
+*.7z filter=lfs diff=lfs merge=lfs binary
+
+# Office files
+*.doc filter=lfs diff=lfs merge=lfs binary
+*.docx filter=lfs diff=lfs merge=lfs binary
+*.xls filter=lfs diff=lfs merge=lfs binary
+*.xlsx filter=lfs diff=lfs merge=lfs binary
+*.xlsm filter=lfs diff=lfs merge=lfs binary
+*.ppt filter=lfs diff=lfs merge=lfs binary
+*.pptx filter=lfs diff=lfs merge=lfs binary
+*.msg filter=lfs diff=lfs merge=lfs binary
