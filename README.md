@@ -1,11 +1,13 @@
 # StopWatch
 
-This is the project solution used in PLC2's 5-days class **Professional VHDL**.
+This is the project solution used in PLC2's 5-days class [**Professional VHDL**](https://www.plc2.com/en/training/details/semsearch/professional-vhdl/).
 It develops step by step a stop watch running on a **Digilent Nexys4 DDR** board
 (new name *Nexys A7*).
 
 [![Digilent NexysA7][Nexys4DDR]][Nexys4DDR]  
 Source: [Digilent](digilentinc.com)
+
+
 
 ## Requirements
 
@@ -16,7 +18,10 @@ Source: [Digilent](digilentinc.com)
 ### Software
 * Vivado 2019.2 or later (releases Nov. 2019)
 
+
+
 ## User Interface
+
 ### Buttons
 
 | Button                     | Function     |
@@ -41,6 +46,8 @@ Source: [Digilent](digilentinc.com)
 | 7                          | unused       |
 | 8 (left most)              | unused       |
 
+
+
 ## Project Structure
 
 The Vivado project file contains a multi-project setup. There are 3 top-level
@@ -61,9 +68,14 @@ sets have been defined too.
 
 [![Testbenches][Testbenches]][Testbenches]
 
+
+
 # License
 
-MIT License
+Licensed under [MIT License](LICENSE.md).
+
+---------------
+SPDX-License-Identifier: MIT
 
 
 [Nexys4DDR]: doc/images/Digilent-NexysA7.jpg
