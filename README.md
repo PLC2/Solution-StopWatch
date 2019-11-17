@@ -35,16 +35,9 @@ Source: [Digilent](digilentinc.com)
 
 ### 7-Segment Display
 
-| Digit                      | Value     |
-| -------------------------- | ------------ |
-| 1 (right most)             | 1/100 sec    |
-| 2                          | 1/10 sec     |
-| 3                          | 1 sec        |
-| 4                          | 10 sec       |
-| 5                          | 1 min        |
-| 6                          | 10 min       |
-| 7                          | unused       |
-| 8 (left most)              | unused       |
+| 8 (left most) | 7          | 6          | 5          | 4          | 3          | 2          | 1 (right most) |
+| :-----------: | :--------: | :--------: | :--------: | :--------: | :--------: | :--------: | :------------: |
+| 1/100 sec     | 1/10 sec   | 1 sec      | 10 sec     | 1 min      | 10 min     | unused     | unused         |
 
 
 
