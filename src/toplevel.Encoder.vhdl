@@ -11,15 +11,15 @@ entity toplevel is
 		constant CLOCK_PERIOD : time := 10 ns
 	);
 	port (
-		Switch         : in  std_logic_vector(3 downto 0);
+		NexysA7_GPIO_Switch         : in  std_logic_vector(3 downto 0);
 
-		Seg7_Cathode_n : out std_logic_vector(7 downto 0);
-		Seg7_Anode_n   : out std_logic_vector(7 downto 0)
+		NexysA7_GPIO_Seg7_Cathode_n : out std_logic_vector(7 downto 0);
+		NexysA7_GPIO_Seg7_Anode_n   : out std_logic_vector(7 downto 0)
 	);
 end entity;
 
 
-architecture trl of toplevel is
+architecture rtl of toplevel is
 	signal Cathode : std_logic_vector(7 downto 0);
 	signal Anode   : std_logic_vector(7 downto 0);
 
@@ -28,13 +28,13 @@ begin
 	-- 7-segment encoder
 	encoder: entity work.seg7_Encoder
 		port map (
-			BCDValue  => unsigned(Switch),
+			BCDValue  => unsigned(NexysA7_GPIO_Switch),
 			Dot       => '1',
 			
 			Seg7Code  => Cathode
 		);
 
 	-- convert low-active outputs
-	Seg7_Cathode_n <= not Cathode;
-	Seg7_Anode_n   <= not x"01";
+	NexysA7_GPIO_Seg7_Cathode_n <= not Cathode;
+	NexysA7_GPIO_Seg7_Anode_n   <= not x"01";
 end architecture;
