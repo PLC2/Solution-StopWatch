@@ -1,7 +1,7 @@
 # Images
-*.jpeg filter=lfs diff=lfs merge=lfs binary
-*.jpg filter=lfs diff=lfs merge=lfs binary
-*.png filter=lfs diff=lfs merge=lfs binary
+#*.jpeg filter=lfs diff=lfs merge=lfs binary
+#*.jpg filter=lfs diff=lfs merge=lfs binary
+#*.png filter=lfs diff=lfs merge=lfs binary
 
 # Documents
 *.pdf filter=lfs diff=lfs merge=lfs binary
