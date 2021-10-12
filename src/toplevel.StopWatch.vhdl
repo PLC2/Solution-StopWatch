@@ -8,7 +8,7 @@ use     work.StopWatch_pkg.all;
 
 entity toplevel is
 	generic (
-		constant CLOCK_PERIOD       : time := 10 ns
+		constant CLOCK_FREQ         : freq := 100 MHz
 	);
 	port (
 		NexysA7_SystemClock         : in  std_logic;
@@ -54,16 +54,16 @@ begin
 	-- Debounce input signals
 	deb: entity work.Debouncer
 		generic map (
-			CLOCK_PERIOD  => CLOCK_PERIOD,
-			BITS          => 2
+			CLOCK_FREQ  => CLOCK_FREQ,
+			BITS        => 2
 		)
 		port map (
-			Clock     => NexysA7_SystemClock,
+			Clock       => NexysA7_SystemClock,
 			
-			Input(0)  => Board_Reset,
-			Input(1)  => NexysA7_GPIO_Button(0),
-			Output(0) => Deb_Reset,
-			Output(1) => Deb_Start
+			Input(0)    => Board_Reset,
+			Input(1)    => NexysA7_GPIO_Button(0),
+			Output(0)   => Deb_Reset,
+			Output(1)   => Deb_Start
 		);
 
 	Reset <= Deb_Reset;
@@ -78,10 +78,10 @@ begin
 	-- Stopwatch
 	sw: entity work.Stopwatch
 		generic map (
-			CLOCK_PERIOD  => CLOCK_PERIOD,
+			CLOCK_FREQ  => CLOCK_FREQ,
 			
-			TIMEBASE      => 10 ms,
-			CONFIG        => STOPWATCH_CONFIGURATION
+			TIMEBASE    => 10 ms,
+			CONFIG      => STOPWATCH_CONFIGURATION
 		)
 		port map (
 			Clock  => NexysA7_SystemClock,
@@ -95,7 +95,7 @@ begin
 	-- 7-segment display
 	display: entity work.seg7_Display
 		generic map (
-			CLOCK_PERIOD  => CLOCK_PERIOD,
+			CLOCK_FREQ    => CLOCK_FREQ,
 			DIGITS        => Digits'length
 		)
 		port map (
@@ -108,6 +108,6 @@ begin
 		);
 
 	-- convert to low-active outputs
-	NexysA7_GPIO_Seg7_Cathode_n <= not Cathode;
-	NexysA7_GPIO_Seg7_Anode_n   <= not ((NexysA7_GPIO_Seg7_Anode_n'high downto Anode'length => '0') & Anode);
+	NexysA7_GPIO_Seg7_Cathode_n <= not Cathode when rising_edge(NexysA7_SystemClock);
+	NexysA7_GPIO_Seg7_Anode_n   <= not ((NexysA7_GPIO_Seg7_Anode_n'high downto Anode'length => '0') & Anode) when rising_edge(NexysA7_SystemClock);
 end architecture;

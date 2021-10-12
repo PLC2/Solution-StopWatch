@@ -8,10 +8,10 @@ use     work.StopWatch_pkg.all;
 
 entity Stopwatch is
 	generic (
-		CLOCK_PERIOD  : time := 10 ns;
+		CLOCK_FREQ  : freq := 100 MHz;
 		
-		TIMEBASE      : time;
-		CONFIG        : T_STOPWATCH_CONFIGURATION
+		TIMEBASE    : time;
+		CONFIG      : T_STOPWATCH_CONFIGURATION
 	);
 	port (
 		Clock  : in  std_logic;
@@ -87,7 +87,7 @@ begin
 
 	TimeBaseCnt: entity work.Counter
 		generic map (
-			MODULO     => TIMEBASE / (CLOCK_PERIOD * ite(IS_SIMULATION, 100, 1)),
+			MODULO     => TimingToCycles(ite(IS_SIMULATION, 100 ns, TIMEBASE), CLOCK_FREQ),
 			BITS       => 0
 		)
 		port map (
@@ -105,7 +105,7 @@ begin
 		cnt: entity work.Counter
 			generic map (
 				MODULO     => CONFIG(i).Modulo,
-				BITS       => Digits(i)'length
+				BITS       => Digits'element'length
 			)
 			port map (
 				Clock      => Clock,

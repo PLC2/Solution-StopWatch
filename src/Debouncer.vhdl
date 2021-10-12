@@ -7,7 +7,7 @@ use     work.Utilities.all;
 
 entity Debouncer is
 	generic (
-		CLOCK_PERIOD   : time := 10 ns;
+		CLOCK_FREQ     : freq := 100 MHz;
 		DEBOUNCE_TIME  : time := 3 ms;
 		
 		BITS           : positive
@@ -21,13 +21,14 @@ entity Debouncer is
 end entity;
 
 architecture rtl of Debouncer is
-	constant DEBOUNCE_COUNTER_MAX  : positive := DEBOUNCE_TIME / (CLOCK_PERIOD* ite(IS_SIMULATION, 20, 1));
+	constant DEBOUNCE_COUNTER_MAX  : positive := TimingToCycles(ite(IS_SIMULATION, 1 us, DEBOUNCE_TIME), CLOCK_FREQ);
 	constant DEBOUNCE_COUNTER_BITS : positive := log2(DEBOUNCE_COUNTER_MAX);
 	
 begin
-	assert false report "CLOCK_PERIOD:         " & time'image(CLOCK_PERIOD);
+	assert false report "CLOCK_FREQ:           " & freq'image(CLOCK_FREQ);
 	assert false report "DEBOUNCE_TIME:        " & time'image(DEBOUNCE_TIME);
-	assert false report "DEBOUNCE_COUNTER_MAX: " & integer'image(DEBOUNCE_COUNTER_MAX);
+	--assert false report "DEBOUNCE_COUNTER_MAX: " & to_string(10 ns);
+	--assert false report "INTEGER'high:         " & integer'image(integer'high);
 
 	genBits: for i in Input'range generate
 		signal DebounceCounter         : signed(DEBOUNCE_COUNTER_BITS downto 0) := to_signed(DEBOUNCE_COUNTER_MAX - 3, DEBOUNCE_COUNTER_BITS + 1);
