@@ -49,18 +49,9 @@ sets have been defined too.
 
 [![Multi-project setup][MultiProjectSetup]][MultiProjectSetup]
 
-### Design Hierarchy
-
-[![Design Hierarchy][DesignHierachy]][DesignHierachy]
-
-### Constraint Sets
-
-[![Constraint Sets][ConstraintSets]][ConstraintSets]
-
-### Testbenches
-
-[![Testbenches][Testbenches]][Testbenches]
-
+| Design Hierarchy                                      | Constraint Sets                                      | Testbenches                                |
+| ----------------------------------------------------- | ---------------------------------------------------- | ------------------------------------------ |
+| [![Design Hierarchy][DesignHierachy]][DesignHierachy] | [![Constraint Sets][ConstraintSets]][ConstraintSets] | [![Testbenches][Testbenches]][Testbenches] |
 
 
 # License
