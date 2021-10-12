@@ -16,7 +16,7 @@ Source: [Digilent](digilentinc.com)
 * Micro-USB cable
 
 ### Software
-* Vivado 2019.2 or later (releases Nov. 2019)
+* Vivado 2021.1 or later (releases Jun. 2021)
 
 
 
