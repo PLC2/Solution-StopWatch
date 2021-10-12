@@ -33,6 +33,12 @@ begin
 			when x"7" =>        temp := "0000111";   -- 	E   C         4   2
 			when x"8" =>        temp := "1111111";   -- 	 DDD  DOT      333  7
 			when x"9" =>        temp := "1101111";   --
+			when x"A" =>        temp := "1110111";   --
+			when x"B" =>        temp := "1111100";   --
+			when x"C" =>        temp := "0111001";   --
+			when x"D" =>        temp := "0111110";   --
+			when x"E" =>        temp := "1111001";   --
+			when x"F" =>        temp := "1110001";   --
 			when others =>      temp := "XXXXXXX";   --
 		end case;
 		

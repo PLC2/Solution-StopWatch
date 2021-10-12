@@ -8,7 +8,7 @@ use     work.StopWatch_pkg.all;
 
 entity toplevel is
 	generic (
-		constant CLOCK_PERIOD : time := 10 ns
+		constant CLOCK_FREQ         : freq := 100 MHz
 	);
 	port (
 		NexysA7_SystemClock         : in  std_logic;
@@ -41,7 +41,7 @@ begin
 	-- 7-segment display
 	display: entity work.seg7_Display
 		generic map (
-			CLOCK_PERIOD  => CLOCK_PERIOD,
+			CLOCK_FREQ    => CLOCK_FREQ,
 			DIGITS        => Digits'length
 		)
 		port map (
@@ -55,6 +55,6 @@ begin
 		);
 
 	-- convert low-active outputs
-	NexysA7_GPIO_Seg7_Cathode_n <= not Cathode;
-	NexysA7_GPIO_Seg7_Anode_n   <= not ((NexysA7_GPIO_Seg7_Anode_n'high downto Anode'length => '0') & Anode);
+	NexysA7_GPIO_Seg7_Cathode_n <= not Cathode when rising_edge(NexysA7_SystemClock);
+	NexysA7_GPIO_Seg7_Anode_n   <= not ((NexysA7_GPIO_Seg7_Anode_n'high downto Anode'length => '0') & Anode) when rising_edge(NexysA7_SystemClock);
 end architecture;

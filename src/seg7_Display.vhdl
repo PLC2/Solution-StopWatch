@@ -8,8 +8,8 @@ use     work.StopWatch_pkg.all;
 
 entity seg7_Display is
 	generic (
-		CLOCK_PERIOD  : time := 10 ns;
-		REFRESH_RATE  : time := 200 us;
+		CLOCK_FREQ    : freq := 100 MHz;
+		REFRESH_RATE  : time := 1000 us;
 		DIGITS        : positive
 	);
 	port (
@@ -25,47 +25,40 @@ end entity;
 
 
 architecture rtl of seg7_Display is
-	constant TIMEBASE_COUNTER_MAX : positive := REFRESH_RATE / (CLOCK_PERIOD * ite(IS_SIMULATION, 1_000, 1));
+	constant TIMEBASE_COUNTER_MAX : positive := TimingToCycles(REFRESH_RATE, CLOCK_FREQ); -- * ite(IS_SIMULATION, 1_000, 1));
 	
-	signal Timebase_Counter : unsigned(log2(TIMEBASE_COUNTER_MAX) - 1 downto 0) := (others => '0');
 	signal Timebase_Tick    : std_logic;
-	
-	signal Digit_Select     : unsigned(log2(DIGITS) - 1 downto 0) := (others => '0');
-	signal Digit_Select_ov  : std_logic;
+	signal Digit_Select     : unsigned(log2(DIGITS) - 1 downto 0);
 	
 	signal Digit            : T_BCD;
 	signal Dot              : std_logic;
 begin
 	-- refresh rate
-	process(Clock)
-	begin
-		if rising_edge(Clock) then
-			if (Timebase_Tick = '1') then
-				Timebase_Counter <= (others => '0');
-			else
-				Timebase_Counter <= Timebase_Counter + 1;
-			end if;
-		end if;
-	end process;
-	
-	Timebase_Tick <= '1' when (Timebase_Counter = TIMEBASE_COUNTER_MAX - 1) else '0';
-	
+	cnt1khZ: entity work.Counter
+		generic map (
+			MODULO => TIMEBASE_COUNTER_MAX
+		)
+		port map (
+			Clock      => Clock,
+			Reset      => '0',
+			Enable     => '1',
+			Value      => open,
+			WrapAround => Timebase_Tick
+		);
 	
 	-- counter to select digits (time multiplexing)
-	process(Clock)
-	begin
-		if rising_edge(Clock) then
-			if (Timebase_Tick = '1') then
-				if (Digit_Select_ov = '1') then
-					Digit_Select <= (others => '0'); -- to_unsigned(5, Digit_Select'length);
-				else
-					Digit_Select <= Digit_Select + 1;
-				end if;
-			end if;
-		end if;
-	end process;
-	
-	Digit_Select_ov <= '1' when (Digit_Select = DIGITS - 1) else '0';
+	cntDigitSelect: entity work.Counter
+		generic map (
+			MODULO => DIGITS,
+			BITS   => Digit_Select'length
+		)
+		port map (
+			Clock      => Clock,
+			Reset      => '0',
+			Enable     => Timebase_Tick,
+			Value      => Digit_Select,
+			WrapAround => open
+		);
 	
 	-- multiplexer
 	Digit <= DigitValues(to_index(Digit_Select, DigitValues'high));
@@ -79,7 +72,6 @@ begin
 			
 			Seg7Code  => Seg7_Segments
 		);
-	
 	
 	Seg7_Selects <= bin2onehot(Digit_Select, DIGITS);
 end architecture;

@@ -1,13 +1,21 @@
 library IEEE;
 use     IEEE.std_logic_1164.all;
 use     IEEE.numeric_std.all;
-
+use     IEEE.math_real.all;
 
 package Utilities is
+	type freq is range integer'low to integer'high units
+		Hz;
+		kHz = 1000 Hz;
+		MHz = 1000 kHz;
+		GHz = 1000 MHz;
+		THz = 1000 GHz;
+	end units;
+
 	-- deferred constant
 	constant IS_SIMULATION : boolean;
 	
-	function ite(condition : boolean; ThenValue : integer; ElseValue : integer) return integer;
+	function ite(condition : boolean; ThenValue : time; ElseValue : time) return time;
 	
 	function log2(Value : positive) return positive;
 	
@@ -16,6 +24,9 @@ package Utilities is
 	
 	function to_index(value : unsigned; max : positive) return natural;
 	function to_index(value : natural;  max : positive) return natural;
+	
+	function TimingToCycles(Timing : time; Clock_Period : time) return natural;
+	function TimingToCycles(Timing : time; Clock_Frequency: freq) return natural;
 end package;
 
 
@@ -32,7 +43,7 @@ package body Utilities is
 	-- deferred constant initialization
 	constant IS_SIMULATION : boolean := simulation;
 	
-	function ite(condition : boolean; ThenValue : integer; ElseValue : integer) return integer is
+	function ite(condition : boolean; ThenValue : time; ElseValue : time) return time is
 	begin
 		if condition then
 			return ThenValue;
@@ -40,7 +51,7 @@ package body Utilities is
 			return ElseValue;
 		end if;
 	end function;
-
+	
 	function log2(Value : positive) return positive is
 		variable twosPower : natural := 1;
 		variable result    : natural := 0;
@@ -82,5 +93,28 @@ package body Utilities is
 			return max;
 		end if;
 		-- return minimum(value, max);
+	end function;
+	
+	function to_time(f : freq) return time is
+		function div(a : freq; b : freq) return real is
+		begin
+			return real(a / 1 Hz) / real(b / 1 Hz);
+		end function;
+	begin
+		return div(1000 MHz, f) * 1 ns;
+	end function;
+	
+	function TimingToCycles(Timing : time; Clock_Period : time) return natural is
+		function div(a : time; b : time) return real is
+		begin
+			return real(a / 1 fs) / real(b / 1 fs);
+		end function;
+	begin
+		return natural(ceil(div(Timing, Clock_Period)));
+	end;
+
+	function TimingToCycles(Timing : time; Clock_Frequency : freq) return natural is
+	begin
+		return TimingToCycles(Timing, to_time(Clock_Frequency));
 	end function;
 end package body;
