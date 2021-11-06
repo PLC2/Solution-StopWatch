@@ -11,12 +11,12 @@ entity toplevel is
 		constant CLOCK_FREQ         : freq := 100 MHz
 	);
 	port (
-		NexysA7_SystemClock         : in  std_logic;
-		NexysA7_GPIO_Button_Reset_n : in  std_logic;
+		signal NexysA7_SystemClock         : in  std_logic;
+		signal NexysA7_GPIO_Button_Reset_n : in  std_logic;
 		
-		NexysA7_GPIO_Button         : in  std_logic_vector(0 downto 0);
-		NexysA7_GPIO_Seg7_Cathode_n : out std_logic_vector(7 downto 0);
-		NexysA7_GPIO_Seg7_Anode_n   : out std_logic_vector(7 downto 0)
+		signal NexysA7_GPIO_Button         : in  std_logic_vector(0 downto 0);
+		signal NexysA7_GPIO_Seg7_Cathode_n : out std_logic_vector(7 downto 0);
+		signal NexysA7_GPIO_Seg7_Anode_n   : out std_logic_vector(7 downto 0)
 	);
 end entity;
 

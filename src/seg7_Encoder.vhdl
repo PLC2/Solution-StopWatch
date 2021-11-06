@@ -6,10 +6,10 @@ use     work.StopWatch_pkg.all;
 
 entity seg7_Encoder is
 	port (
-		BCDValue  : in  T_BCD;
-		Dot       : in  std_logic  := '0';
+		signal BCDValue  : in  T_BCD;
+		signal Dot       : in  std_logic  := '0';
 		
-		Seg7Code  : out std_logic_vector(7 downto 0)
+		signal Seg7Code  : out std_logic_vector(7 downto 0)
 	);
 end entity;
 
