@@ -2,7 +2,7 @@ library IEEE;
 use     IEEE.std_logic_1164.all;
 use     IEEE.numeric_std.all;
 
-use     work.Utilities.all;
+use     work.Utilities_pkg.all;
 use     work.StopWatch_pkg.all;
 
 
@@ -11,17 +11,19 @@ entity toplevel is
 		constant CLOCK_FREQ         : freq := 100 MHz
 	);
 	port (
-		NexysA7_SystemClock         : in  std_logic;
+		signal NexysA7_SystemClock         : in  std_logic;
 		
-		NexysA7_GPIO_Switch         : in  std_logic_vector(15 downto 0);
+		signal NexysA7_GPIO_Switch         : in  std_logic_vector(15 downto 0);
 		
-		NexysA7_GPIO_Seg7_Cathode_n : out std_logic_vector(7 downto 0);
-		NexysA7_GPIO_Seg7_Anode_n   : out std_logic_vector(7 downto 0)
+		signal NexysA7_GPIO_Seg7_Cathode_n : out std_logic_vector(7 downto 0);
+		signal NexysA7_GPIO_Seg7_Anode_n   : out std_logic_vector(7 downto 0)
 	);
 end entity;
 
 
 architecture rtl of toplevel is
+	alias SystemClock is NexysA7_SystemClock;
+
 	signal Digits   : T_BCD_Vector(5 downto 0);
 
 	signal Cathode  : std_logic_vector(7 downto 0);
@@ -37,7 +39,6 @@ begin
 	Digits(4) <= Digits(1) + Digits(0);
 	Digits(5) <= Digits(3) - Digits(2);
 	
-
 	-- 7-segment display
 	display: entity work.seg7_Display
 		generic map (
@@ -45,7 +46,7 @@ begin
 			DIGITS        => Digits'length
 		)
 		port map (
-			Clock         => NexysA7_SystemClock,
+			Clock         => SystemClock,
 
 			DigitValues   => Digits,
 			DotValues     => 6d"16",
@@ -55,6 +56,6 @@ begin
 		);
 
 	-- convert low-active outputs
-	NexysA7_GPIO_Seg7_Cathode_n <= not Cathode when rising_edge(NexysA7_SystemClock);
-	NexysA7_GPIO_Seg7_Anode_n   <= not ((NexysA7_GPIO_Seg7_Anode_n'high downto Anode'length => '0') & Anode) when rising_edge(NexysA7_SystemClock);
+	NexysA7_GPIO_Seg7_Cathode_n <= not Cathode when rising_edge(SystemClock);
+	NexysA7_GPIO_Seg7_Anode_n   <= not ((NexysA7_GPIO_Seg7_Anode_n'high downto Anode'length => '0') & Anode) when rising_edge(SystemClock);
 end architecture;

@@ -1,17 +1,15 @@
 library IEEE;
 use     IEEE.std_logic_1164.all;
-use     IEEE.numeric_std.all;
 
-use     work.Utilities.all;
 use     work.StopWatch_pkg.all;
 
 
 entity seg7_Encoder is
 	port (
-		BCDValue  : in  T_BCD;
-		Dot       : in  std_logic  := '0';
+		signal BCDValue  : in  T_BCD;
+		signal Dot       : in  std_logic  := '0';
 		
-		Seg7Code  : out std_logic_vector(7 downto 0)
+		signal Seg7Code  : out std_logic_vector(7 downto 0)
 	);
 end entity;
 
@@ -19,7 +17,7 @@ end entity;
 architecture rtl of seg7_Encoder is
 
 begin
-	process(BCDValue, Dot)
+	process(all)
 		variable temp : std_logic_vector(6 downto 0);
 	begin
 		case BCDValue is -- segments:  GFEDCBA     -- Segment Pos.   Index Pos.

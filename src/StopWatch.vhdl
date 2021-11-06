@@ -2,25 +2,25 @@ library IEEE;
 use     IEEE.std_logic_1164.all;
 use     IEEE.numeric_std.all;
 
-use     work.Utilities.all;
+use     work.Utilities_pkg.all;
 use     work.StopWatch_pkg.all;
 
 
 entity Stopwatch is
 	generic (
-		CLOCK_FREQ  : freq := 100 MHz;
+		constant CLOCK_FREQ  : freq := 100 MHz;
 		
-		TIMEBASE    : time;
-		CONFIG      : T_STOPWATCH_CONFIGURATION
+		constant TIMEBASE    : time;
+		constant CONFIG      : T_STOPWATCH_CONFIGURATION
 	);
 	port (
-		Clock  : in  std_logic;
-		Reset  : in  std_logic;
+		signal Clock  : in  std_logic;
+		signal Reset  : in  std_logic;
 		
-		Start  : in  std_logic;
+		signal Start  : in  std_logic;
 		
-		Digits : out T_BCD_Vector(CONFIG'length - 1 downto 0);
-		Dots   : out std_logic_vector(CONFIG'length - 1 downto 0)
+		signal Digits : out T_BCD_Vector(CONFIG'length - 1 downto 0);
+		signal Dots   : out std_logic_vector(CONFIG'length - 1 downto 0)
 	);
 end entity;
 
@@ -37,7 +37,6 @@ architecture trl of Stopwatch is
 	signal Tick       : std_logic;
 	signal Overflows  : std_logic_vector(CONFIG'length downto 0);
 	
-	
 begin
 	process(Clock)
 	begin
@@ -50,7 +49,7 @@ begin
 		end if;
 	end process;
 	
-	process(State, Start)
+	process(all)
 	begin
 		NextState  <= State;
 	

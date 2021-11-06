@@ -2,27 +2,28 @@ library IEEE;
 use     IEEE.std_logic_1164.all;
 use     IEEE.numeric_std.all;
 
-use     work.Utilities.all;
+use     work.Utilities_pkg.all;
 
 
 entity Counter is
 	generic (
-		MODULO : positive;
-		BITS   : natural := log2(MODULO)
+		constant MODULO : positive;
+		constant BITS   : natural := log2(MODULO)
 	);
 	port (
-		Clock      : in  std_logic;
-		Reset      : in  std_logic;
-		Enable     : in  std_logic;
+		signal Clock      : in  std_logic;
+		signal Reset      : in  std_logic;
+		signal Enable     : in  std_logic;
 		
-		Value      : out unsigned(BITS - 1 downto 0);
-		WrapAround : out std_logic
+		signal Value      : out unsigned(BITS - 1 downto 0);
+		signal WrapAround : out std_logic
 	);
 end entity;
 
 
 architecture rtl of Counter is
 	signal CounterValue : unsigned(log2(MODULO) - 1 downto 0) := (others => '0');
+
 begin
 	process (Clock)
 	begin

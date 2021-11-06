@@ -2,24 +2,24 @@ library IEEE;
 use     IEEE.std_logic_1164.all;
 use     IEEE.numeric_std.all;
 
-use     work.Utilities.all;
+use     work.Utilities_pkg.all;
 use     work.StopWatch_pkg.all;
 
 
 entity seg7_Display is
 	generic (
-		CLOCK_FREQ    : freq := 100 MHz;
-		REFRESH_RATE  : time := 1000 us;
-		DIGITS        : positive
+		constant CLOCK_FREQ    : freq := 100 MHz;
+		constant REFRESH_RATE  : time := 1000 us;
+		constant DIGITS        : positive
 	);
 	port (
-		Clock         : in  std_logic;
+		signal Clock         : in  std_logic;
 		
-		DigitValues   : in  T_BCD_Vector(DIGITS - 1 downto 0);
-		DotValues     : in  std_logic_vector(DIGITS - 1 downto 0) := (others => '0');
+		signal DigitValues   : in  T_BCD_Vector(DIGITS - 1 downto 0);
+		signal DotValues     : in  std_logic_vector(DIGITS - 1 downto 0) := (others => '0');
 		
-		Seg7_Segments : out std_logic_vector(7 downto 0);
-		Seg7_Selects  : out std_logic_vector(DIGITS - 1 downto 0)
+		signal Seg7_Segments : out std_logic_vector(7 downto 0);
+		signal Seg7_Selects  : out std_logic_vector(DIGITS - 1 downto 0)
 	);
 end entity;
 
@@ -32,6 +32,7 @@ architecture rtl of seg7_Display is
 	
 	signal Digit            : T_BCD;
 	signal Dot              : std_logic;
+
 begin
 	-- refresh rate
 	cnt1khZ: entity work.Counter

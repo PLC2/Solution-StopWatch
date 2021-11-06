@@ -2,21 +2,21 @@ library IEEE;
 use     IEEE.std_logic_1164.all;
 use     IEEE.numeric_std.all;
 
-use     work.Utilities.all;
+use     work.Utilities_pkg.all;
 
 
 entity Debouncer is
 	generic (
-		CLOCK_FREQ     : freq := 100 MHz;
-		DEBOUNCE_TIME  : time := 3 ms;
+		constant CLOCK_FREQ     : freq := 100 MHz;
+		constant DEBOUNCE_TIME  : time := 3 ms;
 		
-		BITS           : positive
+		constant BITS           : positive
 	);
 	port (
-		Clock  : in  std_logic;
+		signal Clock  : in  std_logic;
 		
-		Input  : in  std_logic_vector(BITS - 1 downto 0);
-		Output : out std_logic_vector(BITS - 1 downto 0) := (others => '0')
+		signal Input  : in  std_logic_vector(BITS - 1 downto 0);
+		signal Output : out std_logic_vector(BITS - 1 downto 0) := (others => '0')
 	);
 end entity;
 
@@ -31,7 +31,7 @@ begin
 	--assert false report "INTEGER'high:         " & integer'image(integer'high);
 
 	genBits: for i in Input'range generate
-		signal DebounceCounter         : signed(DEBOUNCE_COUNTER_BITS downto 0) := to_signed(DEBOUNCE_COUNTER_MAX - 3, DEBOUNCE_COUNTER_BITS + 1);
+		signal DebounceCounter : signed(DEBOUNCE_COUNTER_BITS downto 0) := to_signed(DEBOUNCE_COUNTER_MAX - 3, DEBOUNCE_COUNTER_BITS + 1);
 	begin
 		process (Clock)
 		begin
