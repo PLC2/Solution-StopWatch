@@ -1,8 +1,6 @@
 library IEEE;
 use     IEEE.std_logic_1164.all;
-use     IEEE.numeric_std.all;
 
-use     work.Utilities.all;
 use     work.StopWatch_pkg.all;
 
 
@@ -19,7 +17,7 @@ end entity;
 architecture rtl of seg7_Encoder is
 
 begin
-	process(BCDValue, Dot)
+	process(all)
 		variable temp : std_logic_vector(6 downto 0);
 	begin
 		case BCDValue is -- segments:  GFEDCBA     -- Segment Pos.   Index Pos.

@@ -50,7 +50,7 @@ begin
 		end if;
 	end process;
 	
-	process(State, Start)
+	process(all)
 	begin
 		NextState  <= State;
 	

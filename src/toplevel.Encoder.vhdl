@@ -25,7 +25,7 @@ begin
 	-- 7-segment encoder
 	encoder: entity work.seg7_Encoder
 		port map (
-			BCDValue  => unsigned(NexysA7_GPIO_Switch),
+			BCDValue  => T_BCD(NexysA7_GPIO_Switch),
 			Dot       => '1',
 			
 			Seg7Code  => Cathode
