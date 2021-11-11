@@ -1,0 +1,17 @@
+Vivado-Docker:
+  image: registry.plc2.de/docker-images/base-image:bullseye
+  tags:
+    - DockerExecutor
+  variables:
+    LM_LICENSE_FILE: "1717@flexlm.plc2.de:1718@flexlm.plc2.de:1719@flexlm.plc2.de"
+    VIVADO_VERSION: "2021.2"
+  before_script:
+    - |
+      apt-get update
+      DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends libtinfo5 locales-all
+  script:
+    - |
+      source /opt/Xilinx/Vivado/${VIVADO_VERSION}/settings64.sh
+      /opt/GitLab-CI-Scripts/exec-Vivado.sh --help
+      
+
