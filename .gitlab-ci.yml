@@ -2,20 +2,49 @@ Vivado-Docker:
   image: registry.plc2.de/docker-images/base-image:Vivado
   tags:
     - DockerExecutor
+  parallel:
+    matrix:
+      - DESIGN:   ["Encoder", "Display", "StopWatch"]
+        TOP_NAME: toplevel
   variables:
+    PROJECT_NAME:   StopWatch
+    RUNS_NAME:      ${DESIGN}
     VIVADO_VERSION: "2021.2"
   script:
     - |
-      echo "GCS:"
-      ls -lAh /tools/GitLab-CI-Scripts
-      echo "GCS/V:"
-      ls -lAh /tools/GitLab-CI-Scripts/Vivado
-      echo "exec"
       exec-Vivado.sh -d \
-      --select-vivado=2021.2 \
-      --project-file=project/StopWatch.xpr \
+      --select-vivado=${VIVADO_VERSION} \
+      --project-file=project/${PROJECT_NAME}.xpr \
       --simple-flow \
-      --synth-name=synth_Encoder \
-      --impl-name=impl_Encoder \
-      --src-name=src_Encoder \
-      --constr-name=const_Encoder
+      --synth-name=synth_${DESIGN} \
+      --impl-name=impl_${DESIGN} \
+      --src-name=src_${DESIGN} \
+      --constr-name=const_${DESIGN}
+### Fail Pipeline if Timing is not met ###
+    - grep 'Timing Summary' ./project/$PROJECT_NAME.runs/impl_$RUNS_NAME/$TOP_NAME.vdi
+    - if grep 'Timing 38-282' ./project/$PROJECT_NAME.runs/impl_$RUNS_NAME/$TOP_NAME.vdi ; then exit 1; fi
+
+  after_script:
+    - CopyFile project/$PROJECT_NAME.runs/synth_$RUNS_NAME/$TOP_NAME.vds .
+    - CopyFile project/$PROJECT_NAME.runs/synth_$RUNS_NAME/${TOP_NAME}_utilization_synth.rpt .
+    - CopyFile project/$PROJECT_NAME.runs/impl_$RUNS_NAME/$TOP_NAME.vdi .
+    - CopyFile project/$PROJECT_NAME.runs/impl_$RUNS_NAME/${TOP_NAME}_opt.dcp .
+    - CopyFile project/$PROJECT_NAME.runs/impl_$RUNS_NAME/${TOP_NAME}_routed.dcp .
+    - CopyFile project/$PROJECT_NAME.runs/impl_$RUNS_NAME/$TOP_NAME.bit .
+    - CopyFile project/$PROJECT_NAME.runs/impl_$RUNS_NAME/$TOP_NAME.ltx .
+    - cp project/$PROJECT_NAME.runs/impl_$RUNS_NAME/$TOP_NAME.sysdef ./$TOP_NAME.hdf || (echo -e "\e[93mNo *.sysdef found, try *.hwdef (without *.bit)\e[0m" && cp project/$PROJECT_NAME.runs/impl_$RUNS_NAME/$TOP_NAME.hwdef ./${TOP_NAME}_no_bitstream.hdf) || echo -e "\e[93mNo Block-Design-Description-File found, skip HDF\e[0m"
+  
+  artifacts:
+    name: "${CI_PROJECT_NAME}-${CI_COMMIT_SHORT_SHA}-${CI_PIPELINE_ID}"
+    when: always
+    paths:
+      - "*.vds"
+      - "*.rpt"
+      - "*.vdi"
+      - "*.bit"
+      - "*.ltx"
+      - "*.hdf"
+      - "*_opt.dcp"
+      - "*_routed.dcp"
+      - "gen/*.csv"
+    expire_in: 1 week
