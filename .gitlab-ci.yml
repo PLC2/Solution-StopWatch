@@ -13,7 +13,7 @@ Vivado-Docker:
   script:
     - cat ~/.profile
     - echo $PATH
-    - echo $GITLAB_CI_SCRIPTS_ROOT
+    - source ~/profile.additions
 #    - |
 #      exec-Vivado.sh -d \
 #      --select-vivado=${VIVADO_VERSION} \
