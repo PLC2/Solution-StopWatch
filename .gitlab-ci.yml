@@ -6,6 +6,11 @@ Vivado-Docker:
     VIVADO_VERSION: "2021.2"
   script:
     - |
+      echo "GCS:"
+      ls -lAh /tools/GitLab-CI-Scripts
+      echo "GCS/V:"
+      ls -lAh /tools/GitLab-CI-Scripts/Vivado
+      echo "exec"
       exec-Vivado.sh -d \
       --select-vivado=2021.2 \
       --project-file=project/StopWatch.xpr \
