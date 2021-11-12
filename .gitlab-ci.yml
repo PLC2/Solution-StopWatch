@@ -7,6 +7,9 @@ Vivado-Docker:
   script:
     - |
       source /opt/Xilinx/Vivado/${VIVADO_VERSION}/settings64.sh
-      ls -lAh /opt2
-      ls -lAh /opt2/GitLab-CI-Scripts
-      /opt2/GitLab-CI-Scripts/exec-Vivado.sh --help
+      echo "ls /tools"
+      ls -lAh /tools
+      echo "ls /tools/GitLab-CI-Scripts"
+      ls -lAh /tools/GitLab-CI-Scripts
+      echo "exec-Vivado"
+      exec-Vivado.sh --help
