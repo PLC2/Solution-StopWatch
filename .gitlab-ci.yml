@@ -1,15 +1,15 @@
 Vivado-Docker:
-  image: registry.plc2.de/docker-images/base-image:Vivado
+  image: ${CI_REGISTRY}/docker-images/base-image:Vivado
   tags:
     - DockerExecutor
   parallel:
     matrix:
-      - DESIGN:   ["Encoder", "Display", "StopWatch"]
-        TOP_NAME: toplevel
+      - DESIGN:         ["Encoder", "Display", "StopWatch"]
+        VIVADO_VERSION: "2021.2"
   variables:
     PROJECT_NAME:   StopWatch
+    TOP_NAME:       toplevel
     RUNS_NAME:      ${DESIGN}
-    VIVADO_VERSION: "2021.2"
   script:
     - |
       exec-Vivado.sh -d \
