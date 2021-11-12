@@ -11,15 +11,18 @@ Vivado-Docker:
     TOP_NAME:       toplevel
     RUNS_NAME:      ${DESIGN}
   script:
-    - |
-      exec-Vivado.sh -d \
-      --select-vivado=${VIVADO_VERSION} \
-      --project-file=project/${PROJECT_NAME}.xpr \
-      --simple-flow \
-      --synth-name=synth_${DESIGN} \
-      --impl-name=impl_${DESIGN} \
-      --src-name=src_${DESIGN} \
-      --constr-name=const_${DESIGN}
+    - cat ~/.profile
+    - echo $PATH
+    - echo $GITLAB_CI_SCRIPTS_ROOT
+#    - |
+#      exec-Vivado.sh -d \
+#      --select-vivado=${VIVADO_VERSION} \
+#      --project-file=project/${PROJECT_NAME}.xpr \
+#      --simple-flow \
+#      --synth-name=synth_${DESIGN} \
+#      --impl-name=impl_${DESIGN} \
+#      --src-name=src_${DESIGN} \
+#      --constr-name=const_${DESIGN}
 ### Fail Pipeline if Timing is not met ###
     - grep 'Timing Summary' ./project/$PROJECT_NAME.runs/impl_$RUNS_NAME/$TOP_NAME.vdi
     - if grep 'Timing 38-282' ./project/$PROJECT_NAME.runs/impl_$RUNS_NAME/$TOP_NAME.vdi ; then exit 1; fi
