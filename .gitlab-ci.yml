@@ -31,6 +31,7 @@ Vivado-Docker:
     - if grep 'Timing 38-282' ./project/$PROJECT_NAME.runs/impl_$RUNS_NAME/$TOP_NAME.vdi ; then exit 1; fi
 
   after_script:
+    - source ~/profile.additions
     - CopyFile project/$PROJECT_NAME.runs/synth_$RUNS_NAME/$TOP_NAME.vds .
     - CopyFile project/$PROJECT_NAME.runs/synth_$RUNS_NAME/${TOP_NAME}_utilization_synth.rpt .
     - CopyFile project/$PROJECT_NAME.runs/impl_$RUNS_NAME/$TOP_NAME.vdi .
