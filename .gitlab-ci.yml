@@ -16,4 +16,6 @@ Vivado-Docker:
       --project-file=project/StopWatch.xpr \
       --simple-flow \
       --synth-name=synth_Encoder \
-      --impl-name=impl_Encoder
+      --impl-name=impl_Encoder \
+      --src-name=src_Encoder \
+      --constr-name=const_Encoder
