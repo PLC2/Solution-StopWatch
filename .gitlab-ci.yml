@@ -6,10 +6,9 @@ Vivado-Docker:
     VIVADO_VERSION: "2021.2"
   script:
     - |
-      source /opt/Xilinx/Vivado/${VIVADO_VERSION}/settings64.sh
-      echo "ls /tools"
-      ls -lAh /tools
-      echo "ls /tools/GitLab-CI-Scripts"
-      ls -lAh /tools/GitLab-CI-Scripts
-      echo "exec-Vivado"
-      exec-Vivado.sh --help
+      exec-Vivado.sh -d \
+      --select-vivado=2021.2 \
+      --project-file=project/StopWatch.xpr \
+      --simple-flow \
+      --synth-name=synth_Encoder \
+      --impl-name=impl_Encoder
