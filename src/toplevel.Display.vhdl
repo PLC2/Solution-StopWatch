@@ -8,7 +8,7 @@ use     work.StopWatch_pkg.all;
 
 entity toplevel is
 	generic (
-		constant CLOCK_FREQ         : freq := 100 MHz
+		constant CLOCK_FREQ                : frequency := 100 MHz
 	);
 	port (
 		signal NexysA7_SystemClock         : in  std_logic;
@@ -56,6 +56,6 @@ begin
 		);
 
 	-- convert low-active outputs
-	NexysA7_GPIO_Seg7_Cathode_n <= not Cathode when rising_edge(SystemClock);
+	NexysA7_GPIO_Seg7_Cathode_n <= not Cathode                                                               when rising_edge(SystemClock);
 	NexysA7_GPIO_Seg7_Anode_n   <= not ((NexysA7_GPIO_Seg7_Anode_n'high downto Anode'length => '0') & Anode) when rising_edge(SystemClock);
 end architecture;

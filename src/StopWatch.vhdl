@@ -8,7 +8,7 @@ use     work.StopWatch_pkg.all;
 
 entity Stopwatch is
 	generic (
-		constant CLOCK_FREQ  : freq := 100 MHz;
+		constant CLOCK_FREQ  : frequency := 100 MHz;
 		
 		constant TIMEBASE    : time;
 		constant CONFIG      : T_STOPWATCH_CONFIGURATION

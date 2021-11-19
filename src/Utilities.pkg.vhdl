@@ -4,7 +4,7 @@ use     IEEE.numeric_std.all;
 use     IEEE.math_real.all;
 
 package Utilities_pkg is
-	type freq is range integer'low to integer'high units
+	type frequency is range integer'low to integer'high units
 		Hz;
 		kHz = 1000 Hz;
 		MHz = 1000 kHz;
@@ -17,7 +17,7 @@ package Utilities_pkg is
 	
 	function ite(condition : boolean; ThenValue : time; ElseValue : time) return time;
 	
-	function log2(Value : positive) return positive;
+	function log2(Value : positive) return natural;
 	
 	function bin2onehot(binary : std_logic_vector; bits : natural := 0) return std_logic_vector;
 	function bin2onehot(binary : unsigned;         bits : natural := 0) return std_logic_vector;
@@ -25,8 +25,11 @@ package Utilities_pkg is
 	function to_index(value : unsigned; max : positive) return natural;
 	function to_index(value : natural;  max : positive) return natural;
 	
-	function TimingToCycles(Timing : time; Clock_Period : time) return natural;
-	function TimingToCycles(Timing : time; Clock_Frequency: freq) return natural;
+	function to_time(f : frequency) return time;
+	function to_frequency(t : time) return frequency;
+	
+	function TimingToCycles(Timing : time;      Clock_Frequency: frequency) return natural;
+	function TimingToCycles(Timing : frequency; Clock_Frequency: frequency) return natural;
 end package;
 
 
@@ -52,15 +55,15 @@ package body Utilities_pkg is
 		end if;
 	end function;
 	
-	function log2(Value : positive) return positive is
-		variable twosPower : natural := 1;
-		variable result    : natural := 0;
+	function log2(Value : positive) return natural is
 	begin
-		while (twosPower < Value) loop
-			twosPower := twosPower * 2;
-			result    := result + 1;
+		for i in 0 to 31 loop
+			if 2**i >= Value then
+				return i;
+			end if;
 		end loop;
-		return result;
+		
+		return 0;
 	end function;
 	
 	function bin2onehot(binary : std_logic_vector; bits : natural := 0) return std_logic_vector is
@@ -95,26 +98,29 @@ package body Utilities_pkg is
 		-- return minimum(value, max);
 	end function;
 	
-	function to_time(f : freq) return time is
-		function div(a : freq; b : freq) return real is
-		begin
-			return real(a / 1 Hz) / real(b / 1 Hz);
-		end function;
+	function to_time(f : frequency) return time is
 	begin
-		return div(1000 MHz, f) * 1 ns;
+		return (1.0 / real(f / Hz)) * sec;
 	end function;
 	
-	function TimingToCycles(Timing : time; Clock_Period : time) return natural is
-		function div(a : time; b : time) return real is
-		begin
-			return real(a / 1 fs) / real(b / 1 fs);
-		end function;
+	function to_frequency(t : time) return frequency is
 	begin
-		return natural(ceil(div(Timing, Clock_Period)));
-	end;
+		return (1.0 / real(t / sec)) * Hz;
+	end function;
+	
+	function TimingToCycles(timing : frequency; Clock_Frequency : frequency) return natural is
+		constant delay : time := to_time(timing);
+	begin
+		report "TimingToCycles(freq, freq): delay=" & time'image(delay) severity note;
+		
+		return TimingToCycles(delay, Clock_Frequency);
+	end function;
 
-	function TimingToCycles(Timing : time; Clock_Frequency : freq) return natural is
+	function TimingToCycles(timing : time; Clock_Frequency : frequency) return natural is
+		constant period : time := to_time(Clock_Frequency);
 	begin
-		return TimingToCycles(Timing, to_time(Clock_Frequency));
+		report "TimingToCycles(time, freq): period=" & time'image(period) severity note;
+	
+		return natural(ceil(real(timing / fs) / real(period / fs)));
 	end function;
 end package body;

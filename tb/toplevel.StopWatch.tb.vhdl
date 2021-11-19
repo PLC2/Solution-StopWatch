@@ -3,7 +3,7 @@ use     IEEE.std_logic_1164.all;
 use     IEEE.numeric_std.all;
 
 library lib_StopWatch;
-use     lib_StopWatch.Utilities.all;
+use     lib_StopWatch.Utilities_pkg.all;
 use     lib_StopWatch.StopWatch_pkg.all;
 
 
@@ -12,7 +12,8 @@ end entity;
 
 
 architecture tb of toplevel_tb is
-	constant CLOCK_PERIOD : time      := 10 ns;
+	constant CLOCK_FREQ   : frequency := 100 MHz;
+	constant CLOCK_PERIOD : time      := to_time(CLOCK_FREQ);
 
 	signal StopSimulation : std_logic := '0';
 	signal Clock          : std_logic := '1';
@@ -37,17 +38,17 @@ begin
 	               '1' after 22 ms,
 	               '0' after 22 ms + 2 us;
 
-	DUT: entity lib_StopWatch.toplevel
-		generic map (
-			CLOCK_PERIOD_NS => CLOCK_PERIOD / 1 ns
-		)
-		port map (
-			Clock          => Clock,
-			Reset_n        => Reset,
+--	DUT: entity lib_StopWatch.toplevel
+--		generic map (
+--			CLOCK_FREQ                  => CLOCK_FREQ
+--		)
+--		port map (
+--			NexysA7_SystemClock         => Clock,
+--			NexysA7_GPIO_Button_Reset_n => Reset,
 			
-			Button(0)      => StartButton,
-			Seg7_Cathode_n => open,
-			Seg7_Anode_n   => open
-		);
+--			NexysA7_GPIO_Button(0)      => StartButton,
+--			NexysA7_GPIO_Seg7_Cathode_n => open,
+--			NexysA7_GPIO_Seg7_Anode_n   => open
+--		);
 	
 end architecture;
