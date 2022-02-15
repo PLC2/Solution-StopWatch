@@ -5,7 +5,7 @@ variables:
   # see https://docs.gitlab.com/runner/configuration/feature-flags.html
   FF_SCRIPT_SECTIONS: "true"
 
-Vivado-Docker:
+Vivado:
   image: ${CI_REGISTRY}/docker-images/vivado:latest
   tags:
     - DockerExecutor
@@ -19,23 +19,18 @@ Vivado-Docker:
     RUNS_NAME:      ${DESIGN}
   script:
     - |
-      exec-Vivado.sh -d \
-      --select-vivado=${VIVADO_VERSION} \
+      exec-Vivado.sh \
+      --select-version=${VIVADO_VERSION} \
       --project-file=project/${PROJECT_NAME}.xpr \
       --simple-flow \
       --synth-name=synth_${DESIGN} \
       --impl-name=impl_${DESIGN} \
       --src-name=src_${DESIGN} \
       --constr-name=const_${DESIGN}
-    ### Fail Pipeline if Timing is not met ###
-    - |
-      echo -e "${ANSI_CYAN}Timing summary evolution${ANSI_NOCOLOR}"
-      grep 'Timing Summary' ./${PROJECT_NAME}/$PROJECT_NAME.runs/impl_$RUNS_NAME/$TOP_NAME.vdi | sed 's/^/  /'
-      TimingFailed=$(grep -m 1 'Timing 38-282' ./${PROJECT_NAME}/$PROJECT_NAME.runs/impl_$RUNS_NAME/$TOP_NAME.vdi) \
-        || echo -e "${ANSI_GREEN}[PASSED] Timing analysis.${ANSI_NOCOLOR}" \
-        && (echo -e "${ANSI_RED}[FAILED] Timing analysis.\n${TimingFailed}${ANSI_NOCOLOR}"; exit 1)
+    - CheckTimingEvolution ./${PROJECT_NAME}/${PROJECT_NAME}.runs/impl_${RUNS_NAME}/${TOP_NAME}.vdi
 
   after_script:
+    - CheckSynthesisLogfile ./${PROJECT_NAME}/${PROJECT_NAME}.runs/synth_${RUNS_NAME}/${TOP_NAME}.vds
     - |
       CopyFile ${PROJECT_NAME}/${PROJECT_NAME}.runs/synth_${RUNS_NAME}/${TOP_NAME}.vds .
       CopyFile ${PROJECT_NAME}/${PROJECT_NAME}.runs/synth_${RUNS_NAME}/${TOP_NAME}_utilization_synth.rpt .
