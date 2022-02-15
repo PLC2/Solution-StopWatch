@@ -1,3 +1,10 @@
+variables:
+  GIT_SUBMODULE_STRATEGY: recursive
+  GIT_SUBMODULE_UPDATE_FLAGS: --jobs 4
+
+  # see https://docs.gitlab.com/runner/configuration/feature-flags.html
+  FF_SCRIPT_SECTIONS: "true"
+
 Vivado-Docker:
   image: ${CI_REGISTRY}/docker-images/vivado:latest
   tags:
@@ -20,19 +27,27 @@ Vivado-Docker:
       --impl-name=impl_${DESIGN} \
       --src-name=src_${DESIGN} \
       --constr-name=const_${DESIGN}
-### Fail Pipeline if Timing is not met ###
-    - grep 'Timing Summary' ./project/$PROJECT_NAME.runs/impl_$RUNS_NAME/$TOP_NAME.vdi
-    - if grep 'Timing 38-282' ./project/$PROJECT_NAME.runs/impl_$RUNS_NAME/$TOP_NAME.vdi ; then exit 1; fi
+    ### Fail Pipeline if Timing is not met ###
+    - |
+      echo -e "${ANSI_CYAN}Timing summary evolution${ANSI_NOCOLOR}"
+      grep 'Timing Summary' ./${PROJECT_NAME}/$PROJECT_NAME.runs/impl_$RUNS_NAME/$TOP_NAME.vdi | sed 's/^/  /'
+      TimingFailed=$(grep -m 1 'Timing 38-282' ./${PROJECT_NAME}/$PROJECT_NAME.runs/impl_$RUNS_NAME/$TOP_NAME.vdi) \
+        || echo -e "${ANSI_GREEN}[PASSED] Timing analysis.${ANSI_NOCOLOR}" \
+        && (echo -e "${ANSI_RED}[FAILED] Timing analysis.\n${TimingFailed}${ANSI_NOCOLOR}"; exit 1)
 
   after_script:
-    - CopyFile project/$PROJECT_NAME.runs/synth_$RUNS_NAME/$TOP_NAME.vds .
-    - CopyFile project/$PROJECT_NAME.runs/synth_$RUNS_NAME/${TOP_NAME}_utilization_synth.rpt .
-    - CopyFile project/$PROJECT_NAME.runs/impl_$RUNS_NAME/$TOP_NAME.vdi .
-    - CopyFile project/$PROJECT_NAME.runs/impl_$RUNS_NAME/${TOP_NAME}_opt.dcp .
-    - CopyFile project/$PROJECT_NAME.runs/impl_$RUNS_NAME/${TOP_NAME}_routed.dcp .
-    - CopyFile project/$PROJECT_NAME.runs/impl_$RUNS_NAME/$TOP_NAME.bit .
-    - CopyFile project/$PROJECT_NAME.runs/impl_$RUNS_NAME/$TOP_NAME.ltx .
-#    - cp project/$PROJECT_NAME.runs/impl_$RUNS_NAME/$TOP_NAME.sysdef ./$TOP_NAME.hdf || (echo -e "\e[93mNo *.sysdef found, try *.hwdef (without *.bit)\e[0m" && cp project/$PROJECT_NAME.runs/impl_$RUNS_NAME/$TOP_NAME.hwdef ./${TOP_NAME}_no_bitstream.hdf) || echo -e "\e[93mNo Block-Design-Description-File found, skip HDF\e[0m"
+    - |
+      CopyFile ${PROJECT_NAME}/${PROJECT_NAME}.runs/synth_${RUNS_NAME}/${TOP_NAME}.vds .
+      CopyFile ${PROJECT_NAME}/${PROJECT_NAME}.runs/synth_${RUNS_NAME}/${TOP_NAME}_utilization_synth.rpt .
+      CopyFile ${PROJECT_NAME}/${PROJECT_NAME}.runs/impl_${RUNS_NAME}/${TOP_NAME}_utilization_placed.rpt .
+      CopyFile ${PROJECT_NAME}/${PROJECT_NAME}.runs/impl_${RUNS_NAME}/${TOP_NAME}.vdi .
+      CopyFile ${PROJECT_NAME}/${PROJECT_NAME}.runs/impl_${RUNS_NAME}/${TOP_NAME}_opt.dcp .
+      CopyFile ${PROJECT_NAME}/${PROJECT_NAME}.runs/impl_${RUNS_NAME}/${TOP_NAME}_routed.dcp .
+      CopyFile ${PROJECT_NAME}/${PROJECT_NAME}.runs/impl_${RUNS_NAME}/${TOP_NAME}.bit .
+      CopyFile ${PROJECT_NAME}/${PROJECT_NAME}.runs/impl_${RUNS_NAME}/${TOP_NAME}.bin .
+      CopyFile ${PROJECT_NAME}/${PROJECT_NAME}.runs/impl_${RUNS_NAME}/${TOP_NAME}.ltx .
+      CopyFile --rename ${PROJECT_NAME}/${PROJECT_NAME}.runs/impl_${RUNS_NAME}/${TOP_NAME}.sysdef ${TOP_NAME}.hdf
+      CopyFile --rename ${PROJECT_NAME}/${PROJECT_NAME}.runs/impl_${RUNS_NAME}/${TOP_NAME}.hwdef  ${TOP_NAME}_no_bitstream.hdf
   
   artifacts:
     name: "${CI_PROJECT_NAME}-${CI_COMMIT_SHORT_SHA}-${CI_PIPELINE_ID}"
