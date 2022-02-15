@@ -27,22 +27,22 @@ Vivado:
       --impl-name=impl_${DESIGN} \
       --src-name=src_${DESIGN} \
       --constr-name=const_${DESIGN}
-    - CheckTimingEvolution ./${PROJECT_NAME}/${PROJECT_NAME}.runs/impl_${RUNS_NAME}/${TOP_NAME}.vdi
+    - CheckTimingEvolution ./project/${PROJECT_NAME}.runs/impl_${RUNS_NAME}/${TOP_NAME}.vdi
 
   after_script:
-    - CheckSynthesisLogfile ./${PROJECT_NAME}/${PROJECT_NAME}.runs/synth_${RUNS_NAME}/${TOP_NAME}.vds
+    - CheckSynthesisLogfile ./project/${PROJECT_NAME}.runs/synth_${RUNS_NAME}/${TOP_NAME}.vds
     - |
-      CopyFile ${PROJECT_NAME}/${PROJECT_NAME}.runs/synth_${RUNS_NAME}/${TOP_NAME}.vds .
-      CopyFile ${PROJECT_NAME}/${PROJECT_NAME}.runs/synth_${RUNS_NAME}/${TOP_NAME}_utilization_synth.rpt .
-      CopyFile ${PROJECT_NAME}/${PROJECT_NAME}.runs/impl_${RUNS_NAME}/${TOP_NAME}_utilization_placed.rpt .
-      CopyFile ${PROJECT_NAME}/${PROJECT_NAME}.runs/impl_${RUNS_NAME}/${TOP_NAME}.vdi .
-      CopyFile ${PROJECT_NAME}/${PROJECT_NAME}.runs/impl_${RUNS_NAME}/${TOP_NAME}_opt.dcp .
-      CopyFile ${PROJECT_NAME}/${PROJECT_NAME}.runs/impl_${RUNS_NAME}/${TOP_NAME}_routed.dcp .
-      CopyFile ${PROJECT_NAME}/${PROJECT_NAME}.runs/impl_${RUNS_NAME}/${TOP_NAME}.bit .
-      CopyFile ${PROJECT_NAME}/${PROJECT_NAME}.runs/impl_${RUNS_NAME}/${TOP_NAME}.bin .
-      CopyFile ${PROJECT_NAME}/${PROJECT_NAME}.runs/impl_${RUNS_NAME}/${TOP_NAME}.ltx .
-      CopyFile --rename ${PROJECT_NAME}/${PROJECT_NAME}.runs/impl_${RUNS_NAME}/${TOP_NAME}.sysdef ${TOP_NAME}.hdf
-      CopyFile --rename ${PROJECT_NAME}/${PROJECT_NAME}.runs/impl_${RUNS_NAME}/${TOP_NAME}.hwdef  ${TOP_NAME}_no_bitstream.hdf
+      CopyFile project/${PROJECT_NAME}.runs/synth_${RUNS_NAME}/${TOP_NAME}.vds .
+      CopyFile project/${PROJECT_NAME}.runs/synth_${RUNS_NAME}/${TOP_NAME}_utilization_synth.rpt .
+      CopyFile project/${PROJECT_NAME}.runs/impl_${RUNS_NAME}/${TOP_NAME}_utilization_placed.rpt .
+      CopyFile project/${PROJECT_NAME}.runs/impl_${RUNS_NAME}/${TOP_NAME}.vdi .
+      CopyFile project/${PROJECT_NAME}.runs/impl_${RUNS_NAME}/${TOP_NAME}_opt.dcp .
+      CopyFile project/${PROJECT_NAME}.runs/impl_${RUNS_NAME}/${TOP_NAME}_routed.dcp .
+      CopyFile project/${PROJECT_NAME}.runs/impl_${RUNS_NAME}/${TOP_NAME}.bit .
+      CopyFile project/${PROJECT_NAME}.runs/impl_${RUNS_NAME}/${TOP_NAME}.bin .
+      CopyFile project/${PROJECT_NAME}.runs/impl_${RUNS_NAME}/${TOP_NAME}.ltx .
+      CopyFile --rename project/${PROJECT_NAME}.runs/impl_${RUNS_NAME}/${TOP_NAME}.sysdef ${TOP_NAME}.hdf
+      CopyFile --rename project/${PROJECT_NAME}.runs/impl_${RUNS_NAME}/${TOP_NAME}.hwdef  ${TOP_NAME}_no_bitstream.hdf
   
   artifacts:
     name: "${CI_PROJECT_NAME}-${CI_COMMIT_SHORT_SHA}-${CI_PIPELINE_ID}"
