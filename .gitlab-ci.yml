@@ -39,10 +39,11 @@ Vivado:
       CopyFile project/${PROJECT_NAME}.runs/impl_${RUNS_NAME}/${TOP_NAME}_opt.dcp .
       CopyFile project/${PROJECT_NAME}.runs/impl_${RUNS_NAME}/${TOP_NAME}_routed.dcp .
       CopyFile project/${PROJECT_NAME}.runs/impl_${RUNS_NAME}/${TOP_NAME}.bit .
-      CopyFile project/${PROJECT_NAME}.runs/impl_${RUNS_NAME}/${TOP_NAME}.bin .
-      CopyFile project/${PROJECT_NAME}.runs/impl_${RUNS_NAME}/${TOP_NAME}.ltx .
-      CopyFile --rename project/${PROJECT_NAME}.runs/impl_${RUNS_NAME}/${TOP_NAME}.sysdef ${TOP_NAME}.hdf
-      CopyFile --rename project/${PROJECT_NAME}.runs/impl_${RUNS_NAME}/${TOP_NAME}.hwdef  ${TOP_NAME}_no_bitstream.hdf
+      
+      # CopyFile project/${PROJECT_NAME}.runs/impl_${RUNS_NAME}/${TOP_NAME}.bin .
+      # CopyFile project/${PROJECT_NAME}.runs/impl_${RUNS_NAME}/${TOP_NAME}.ltx .
+      # CopyFile --rename project/${PROJECT_NAME}.runs/impl_${RUNS_NAME}/${TOP_NAME}.sysdef ${TOP_NAME}.hdf
+      # CopyFile --rename project/${PROJECT_NAME}.runs/impl_${RUNS_NAME}/${TOP_NAME}.hwdef  ${TOP_NAME}_no_bitstream.hdf
   
   artifacts:
     name: "${CI_PROJECT_NAME}-${CI_COMMIT_SHORT_SHA}-${CI_PIPELINE_ID}"
