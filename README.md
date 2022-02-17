@@ -16,7 +16,7 @@ Source: [Digilent](digilentinc.com)
 * Micro-USB cable
 
 ### Software
-* Vivado 2021.1 or later (releases Jun. 2021)
+* Vivado 2021.2 or later (released Oct. 2021)
 
 
 
@@ -35,10 +35,9 @@ Source: [Digilent](digilentinc.com)
 
 ### 7-Segment Display
 
-| 8 (left most) | 7          | 6          | 5          | 4          | 3          | 2          | 1 (right most) |
+| 7 (left most) | 6          | 5          | 4          | 3          | 2          | 1          | 0 (right most) |
 | :-----------: | :--------: | :--------: | :--------: | :--------: | :--------: | :--------: | :------------: |
-| 1/100 sec     | 1/10 sec   | 1 sec      | 10 sec     | 1 min      | 10 min     | unused     | unused         |
-
+| unused        | unused     | 10 min     | 1 min      | 10 sec     | 1 sec      | 1/10 sec   | 1/100 sec      |
 
 
 ## Project Structure
