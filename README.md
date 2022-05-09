@@ -16,7 +16,7 @@ Source: [Digilent](digilentinc.com)
 * Micro-USB cable
 
 ### Software
-* Vivado 2021.2 or later (released Oct. 2021)
+* Vivado 2022.1 or later (released May. 2022)
 
 
 
@@ -42,9 +42,13 @@ Source: [Digilent](digilentinc.com)
 
 ## Project Structure
 
-The Vivado project file contains a multi-project setup. There are 3 top-level
-designs using 3 synthesis runs und 3 implementation runs. Of cause, 3 constraint
-sets have been defined too.
+The repository provides 4 Vivado project files according to the progress of the class:
+1. 7-segment encoder
+1. 7-segment display
+1. Stop watch with simple timing settings
+1. Stop watch with MMCM and timing settings
+
+
 
 [![Multi-project setup][MultiProjectSetup]][MultiProjectSetup]
 
