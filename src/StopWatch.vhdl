@@ -87,7 +87,7 @@ begin
 	TimeBaseCnt: entity work.Counter
 		generic map (
 			MODULO     => TimingToCycles(ite(IS_SIMULATION, 100 ns, TIMEBASE), CLOCK_FREQ),
-			BITS       => 0
+			BITS       => 1
 		)
 		port map (
 			Clock      => Clock,

@@ -38,17 +38,17 @@ begin
 	               '1' after 22 ms,
 	               '0' after 22 ms + 2 us;
 
---	DUT: entity lib_StopWatch.toplevel
---		generic map (
---			CLOCK_FREQ                  => CLOCK_FREQ
---		)
---		port map (
---			NexysA7_SystemClock         => Clock,
---			NexysA7_GPIO_Button_Reset_n => Reset,
+	DUT: entity lib_StopWatch.toplevel
+		generic map (
+			CLOCK_FREQ                  => CLOCK_FREQ
+		)
+		port map (
+			NexysA7_SystemClock         => Clock,
+			NexysA7_GPIO_Button_Reset_n => Reset,
 			
---			NexysA7_GPIO_Button(0)      => StartButton,
---			NexysA7_GPIO_Seg7_Cathode_n => open,
---			NexysA7_GPIO_Seg7_Anode_n   => open
---		);
+			NexysA7_GPIO_Button(0)      => StartButton,
+			NexysA7_GPIO_Seg7_Cathode_n => open,
+			NexysA7_GPIO_Seg7_Anode_n   => open
+		);
 	
 end architecture;

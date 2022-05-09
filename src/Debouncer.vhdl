@@ -25,8 +25,8 @@ architecture rtl of Debouncer is
 	constant DEBOUNCE_COUNTER_BITS : positive := log2(DEBOUNCE_COUNTER_MAX);
 	
 begin
-	assert false report "CLOCK_FREQ:           " & frequency'image(CLOCK_FREQ);
-	assert false report "DEBOUNCE_TIME:        " & time'image(DEBOUNCE_TIME);
+	assert false report "CLOCK_FREQ:           " & frequency'image(CLOCK_FREQ) severity note;
+	assert false report "DEBOUNCE_TIME:        " & time'image(DEBOUNCE_TIME)   severity note;
 	--assert false report "DEBOUNCE_COUNTER_MAX: " & to_string(10 ns);
 	--assert false report "INTEGER'high:         " & integer'image(integer'high);
 
