@@ -4,7 +4,7 @@ use     IEEE.numeric_std.all;
 use     IEEE.math_real.all;
 
 package Utilities_pkg is
-	type frequency is range integer'low to integer'high units
+	type frequency is range natural'low to natural'high units
 		Hz;
 		kHz = 1000 Hz;
 		MHz = 1000 kHz;
@@ -72,15 +72,10 @@ package body Utilities_pkg is
 	end function;
 	
 	function bin2onehot(binary : unsigned; bits : natural := 0) return std_logic_vector is
-		variable result : std_logic_vector(2**binary'length - 1 downto 0) := (others => '0');
+		variable result : unsigned(2**binary'length - 1 downto 0) := (others => '0');
 	begin
 		result(to_integer(binary)) := '1';
-		
-		if (bits = 0) then
-			return result;
-		else
-			return result(bits - 1 downto 0);
-		end if;
+		return std_logic_vector(resize(result, bits));
 	end function;
 	
 	function to_index(value : unsigned; max : positive) return natural is
@@ -117,10 +112,12 @@ package body Utilities_pkg is
 	end function;
 
 	function TimingToCycles(timing : time; Clock_Frequency : frequency) return natural is
-		constant period : time := to_time(Clock_Frequency);
+		constant resolution : time := 1 fs; --std.env.resolution_limit;
+		constant period     : time := to_time(Clock_Frequency);
 	begin
-		report "TimingToCycles(time, freq): period=" & time'image(period) severity note;
+		report "TimingToCycles(time, freq): period=" & time'image(period) & " -- " & time'image(std.env.resolution_limit) severity note;
 	
-		return natural(ceil(real(timing / fs) / real(period / fs)));
+--		return natural(ceil(real(timing / resolution) / real(period / resolution)));
+		return natural(ceil(real(time'pos(timing)) / real(time'pos(period))));
 	end function;
 end package body;
