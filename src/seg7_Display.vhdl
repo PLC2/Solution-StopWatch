@@ -8,8 +8,8 @@ use     work.StopWatch_pkg.all;
 
 entity seg7_Display is
 	generic (
-		constant CLOCK_FREQ    : freq := 100 MHz;
-		constant REFRESH_RATE  : time := 1000 us;
+		constant CLOCK_FREQ    : frequency := 100 MHz;
+		constant REFRESH_RATE  : frequency := 1 kHz;
 		constant DIGITS        : positive
 	);
 	port (

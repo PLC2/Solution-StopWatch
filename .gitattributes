@@ -25,3 +25,16 @@
 *.ppt filter=lfs diff=lfs merge=lfs binary
 *.pptx filter=lfs diff=lfs merge=lfs binary
 *.msg filter=lfs diff=lfs merge=lfs binary
+
+# Enables auto detection of CRLF and LF
+* text=auto
+*.bd -diff
+*.bxml -diff
+*.xpr -diff
+*.xci -diff
+
+# Ensure Xilinx Vivado files will only be merged as binary
+*.bd -diff merge=binary
+*.bxml -diff merge=binary
+*.xpr -diff merge=binary
+*.xci -diff merge=binary

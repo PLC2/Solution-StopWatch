@@ -2,6 +2,8 @@ library IEEE;
 use     IEEE.std_logic_1164.all;
 use     IEEE.numeric_std.all;
 
+library PoC;
+
 use     work.Utilities_pkg.all;
 use     work.StopWatch_pkg.all;
 
@@ -54,6 +56,34 @@ architecture rtl of toplevel is
 begin
 	-- convert from low-active inputs
 	Board_Reset <= not NexysA7_GPIO_Button_Reset_n;
+
+	clkNet: entity PoC.ClockNetwork
+		generic map (
+			CLOCK_IN_FREQ             => 100.0e6
+		)
+		port map (
+			ClockIn_100MHz            => NexysA7_SystemClock,
+	
+			Control_Clock_100MHz      => open,
+			
+			Clock_200MHz              => open,
+			Clock_100MHz              => SystemClock,
+	
+			Clock_Stable_200MHz       => open,
+			Clock_Stable_100MHz       => open
+		);
+
+	inputSync: entity PoC.sync_Bits_Xilinx
+			generic map (
+				BITS          => NexysA7_GPIO_Button'length + 1              -- number of BITS to synchronize
+			)
+			port map (
+				Clock                               => SystemClock,          -- Clock to be synchronized to
+				Input(NexysA7_GPIO_Button'range)    => NexysA7_GPIO_Button,  -- 
+				Input(NexysA7_GPIO_Button'length)   => Board_Reset,          -- 
+				Output(NexysA7_GPIO_Button'range)   => GPIO_Button_sync,     -- 
+				Output(NexysA7_GPIO_Button'length)  => Board_Reset_sync      -- 
+			);
 
 	-- Debounce input signals
 	deb: entity work.Debouncer

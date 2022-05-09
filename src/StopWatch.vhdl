@@ -8,7 +8,7 @@ use     work.StopWatch_pkg.all;
 
 entity Stopwatch is
 	generic (
-		constant CLOCK_FREQ  : freq := 100 MHz;
+		constant CLOCK_FREQ  : frequency := 100 MHz;
 		
 		constant TIMEBASE    : time;
 		constant CONFIG      : T_STOPWATCH_CONFIGURATION
@@ -77,17 +77,15 @@ begin
 				if (Start = '1') then
 					NextState <= ST_COUNTING;
 				end if;
-			
-			when others =>
-				NextState <= ST_RESET;
-				
+
 		end case;
 	end process;
 
 	TimeBaseCnt: entity work.Counter
 		generic map (
-			MODULO     => TimingToCycles(ite(IS_SIMULATION, 100 ns, TIMEBASE), CLOCK_FREQ),
-			BITS       => 0
+			--MODULO     => TimingToCycles(ite(IS_SIMULATION, 100 ns, 1 sec), CLOCK_FREQ),
+			MODULO     => TimingToCycles(10 Hz, CLOCK_FREQ),
+			BITS       => 1
 		)
 		port map (
 			Clock      => Clock,
