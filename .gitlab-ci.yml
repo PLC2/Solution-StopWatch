@@ -11,22 +11,16 @@ Vivado:
     - DockerExecutor
   parallel:
     matrix:
-      - DESIGN:         ["Encoder", "Display", "StopWatch"]
-        VIVADO_VERSION: "2021.2"
+      - PROJECT_NAME:   ["1_Encoder", "2_Display", "3_StopWatch", "4_WithTiming"]
+        VIVADO_VERSION: "2022.1"
   variables:
-    PROJECT_NAME:   StopWatch
     TOP_NAME:       toplevel
-    RUNS_NAME:      ${DESIGN}
+    RUNS_NAME:      1
   script:
     - |
       exec-Vivado.sh \
       --select-version=${VIVADO_VERSION} \
       --project-file=project/${PROJECT_NAME}.xpr \
-      --simple-flow \
-      --synth-name=synth_${DESIGN} \
-      --impl-name=impl_${DESIGN} \
-      --src-name=src_${DESIGN} \
-      --constr-name=const_${DESIGN}
     - CheckTimingEvolution ./project/${PROJECT_NAME}.runs/impl_${RUNS_NAME}/${TOP_NAME}.vdi
 
   after_script:
@@ -57,5 +51,4 @@ Vivado:
       - "*.hdf"
       - "*_opt.dcp"
       - "*_routed.dcp"
-      - "gen/*.csv"
     expire_in: 1 week
