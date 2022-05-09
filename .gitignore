@@ -2,7 +2,6 @@
 bd/*/**/*.*
 !bd/*/**/*.prj
 !bd/*/*.bd
-!bd/*/*.tcl
 
 # IP Core files
 ip/*/**/*.*
@@ -12,7 +11,9 @@ ip/*/**/*.*
 # Vivado project outputs
 project/**/*.*
 !project/*.xpr
-!project/*.tcl
+
+# Misc
+temp/
 
 # Vivado logs
 *.log

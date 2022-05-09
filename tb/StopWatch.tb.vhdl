@@ -7,24 +7,30 @@ use     lib_StopWatch.Utilities_pkg.all;
 use     lib_StopWatch.StopWatch_pkg.all;
 
 
-entity toplevel_tb is
+entity stopwatch_tb is
 end entity;
 
 
-architecture tb of toplevel_tb is
-	constant CLOCK_FREQ   : frequency := 100 MHz;
-	constant CLOCK_PERIOD : time      := to_time(CLOCK_FREQ);
+architecture tb of stopwatch_tb is
+	constant STOPWATCH_CONFIGURATION : T_STOPWATCH_CONFIGURATION := (
+	--		0 => (Modulo => 10, Dot => '0'),
+	--		1 => (Modulo => 10, Dot => '0'),
+		0 => (Modulo => 10, Dot => '0'),
+		1 => (Modulo =>  6, Dot => '0'),
+		2 => (Modulo => 10, Dot => '0'),
+		3 => (Modulo =>  6, Dot => '0')
+	);
 
-	signal StopSimulation : std_logic := '0';
+	constant CLOCK_PERIOD : time      := 10 ns;  -- 100 MHz
+
 	signal Clock          : std_logic := '1';
 	signal Reset          : std_logic := '1';
 	
 	signal StartButton    : std_logic := '0';
 	
+	signal Digits         : T_BCD_Vector(3 downto 0);
 begin
-	StopSimulation <= '1' after 30 ms;
-
-	Clock <= (Clock xnor StopSimulation) after CLOCK_PERIOD / 2;
+	Clock <= not Clock after CLOCK_PERIOD / 2;
 	Reset <= '0' after 2 us,
 	         '1' after 3 us,
 	         '0' after 20 ms,
@@ -38,17 +44,19 @@ begin
 	               '1' after 22 ms,
 	               '0' after 22 ms + 2 us;
 
-	DUT: entity lib_StopWatch.toplevel
+	DUT: entity lib_StopWatch.Stopwatch
 		generic map (
-			CLOCK_FREQ                  => CLOCK_FREQ
+			CLOCK_FREQ  => 100 MHz,
+			
+			TIMEBASE    => 1 sec,
+			CONFIG      => STOPWATCH_CONFIGURATION
 		)
 		port map (
-			NexysA7_SystemClock         => Clock,
-			NexysA7_GPIO_Button_Reset_n => Reset,
-			
-			NexysA7_GPIO_Button(0)      => StartButton,
-			NexysA7_GPIO_Seg7_Cathode_n => open,
-			NexysA7_GPIO_Seg7_Anode_n   => open
+			Clock  => Clock,
+			Reset  => Reset,
+
+			Start  => StartButton,
+
+			Digits => Digits
 		);
-	
 end architecture;
