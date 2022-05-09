@@ -1,0 +1,61 @@
+variables:
+  GIT_SUBMODULE_STRATEGY: recursive
+  GIT_SUBMODULE_UPDATE_FLAGS: --jobs 4
+
+  # see https://docs.gitlab.com/runner/configuration/feature-flags.html
+  FF_SCRIPT_SECTIONS: "true"
+
+Vivado:
+  image: ${CI_REGISTRY}/docker-images/vivado:latest
+  tags:
+    - DockerExecutor
+  parallel:
+    matrix:
+      - DESIGN:         ["Encoder", "Display", "StopWatch"]
+        VIVADO_VERSION: "2021.2"
+  variables:
+    PROJECT_NAME:   StopWatch
+    TOP_NAME:       toplevel
+    RUNS_NAME:      ${DESIGN}
+  script:
+    - |
+      exec-Vivado.sh \
+      --select-version=${VIVADO_VERSION} \
+      --project-file=project/${PROJECT_NAME}.xpr \
+      --simple-flow \
+      --synth-name=synth_${DESIGN} \
+      --impl-name=impl_${DESIGN} \
+      --src-name=src_${DESIGN} \
+      --constr-name=const_${DESIGN}
+    - CheckTimingEvolution ./project/${PROJECT_NAME}.runs/impl_${RUNS_NAME}/${TOP_NAME}.vdi
+
+  after_script:
+    - CheckSynthesisLogfile ./project/${PROJECT_NAME}.runs/synth_${RUNS_NAME}/${TOP_NAME}.vds
+    - |
+      CopyFile project/${PROJECT_NAME}.runs/synth_${RUNS_NAME}/${TOP_NAME}.vds .
+      CopyFile project/${PROJECT_NAME}.runs/synth_${RUNS_NAME}/${TOP_NAME}_utilization_synth.rpt .
+      CopyFile project/${PROJECT_NAME}.runs/impl_${RUNS_NAME}/${TOP_NAME}_utilization_placed.rpt .
+      CopyFile project/${PROJECT_NAME}.runs/impl_${RUNS_NAME}/${TOP_NAME}.vdi .
+      CopyFile project/${PROJECT_NAME}.runs/impl_${RUNS_NAME}/${TOP_NAME}_opt.dcp .
+      CopyFile project/${PROJECT_NAME}.runs/impl_${RUNS_NAME}/${TOP_NAME}_routed.dcp .
+      CopyFile project/${PROJECT_NAME}.runs/impl_${RUNS_NAME}/${TOP_NAME}.bit .
+      
+      # CopyFile project/${PROJECT_NAME}.runs/impl_${RUNS_NAME}/${TOP_NAME}.bin .
+      # CopyFile project/${PROJECT_NAME}.runs/impl_${RUNS_NAME}/${TOP_NAME}.ltx .
+      # CopyFile --rename project/${PROJECT_NAME}.runs/impl_${RUNS_NAME}/${TOP_NAME}.sysdef ${TOP_NAME}.hdf
+      # CopyFile --rename project/${PROJECT_NAME}.runs/impl_${RUNS_NAME}/${TOP_NAME}.hwdef  ${TOP_NAME}_no_bitstream.hdf
+  
+  artifacts:
+    name: "${CI_PROJECT_NAME}-${CI_COMMIT_SHORT_SHA}-${CI_PIPELINE_ID}"
+    when: always
+    paths:
+      - "*.vds"
+      - "*.rpt"
+      - "*.vdi"
+      - "*.bit"
+      - "*.ltx"
+      - "*.hdf"
+      - "*_opt.dcp"
+      - "*_routed.dcp"
+      - "gen/*.csv"
+    expire_in: 1 week
