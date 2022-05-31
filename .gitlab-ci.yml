@@ -20,7 +20,7 @@ Vivado:
     - |
       exec-Vivado.sh \
       --select-version=${VIVADO_VERSION} \
-      --project-file=project/${PROJECT_NAME}.xpr \
+      --project-file=project/${PROJECT_NAME}.xpr
     - CheckTimingEvolution ./project/${PROJECT_NAME}.runs/impl_${RUNS_NAME}/${TOP_NAME}.vdi
 
   after_script:
